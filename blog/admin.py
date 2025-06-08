@@ -27,7 +27,7 @@ class PostAdmin(admin.ModelAdmin):
             'fields': ('status', 'published_at', 'author')
         }),
         ('Media & Tags', {
-            'fields': ('meta_image', 'tags'),
+            'fields': ('featured_image', 'tags'),
             'classes': ('collapse',)  # Collapsible section
         }),
     )

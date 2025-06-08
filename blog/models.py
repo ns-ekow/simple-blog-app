@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from tinymce.models import HTMLField
+
 
 # The Haram begins
 
@@ -30,12 +32,12 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name='blog_posts'
     )
-    content = models.TextField()
+    content = HTMLField()
     excerpt = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
-    meta_image = models.ImageField(upload_to='blog/images/', null=True, blank=True)
+    featured_image = models.ImageField(upload_to='blog/images/', null=True, blank=True)
     status = models.CharField(
         max_length=10,
         choices =[
