@@ -1,0 +1,49 @@
+<!-- blog/templates/blog/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %}</title>
+    <style>
+        /* Very basic styling for now */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .post {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post h2 {
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><a href="{% url 'blog:post_list' %}">My Blog</a></h1>
+        <nav>
+            <a href="/">Home</a> |
+            <a href="{% url 'blog:post_list' %}">Blog</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+
+</html>

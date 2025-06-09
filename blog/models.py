@@ -71,6 +71,11 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+    
+    def get_excerpt(self):
+        if self.excerpt:
+            return self.excerpt
+        return self.content[:150] + '...' if len(self.content) > 150 else self.content
 
     @property
     def is_published(self):

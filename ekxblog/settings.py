@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     # 'ckeditor_uploader',	#for image uploads
     # had to let ck go. sorry ck 
     'tinymce', #big big things ni mo like though 
-    'blog'
+    'blog',
+    'portfolio'
+
 ]
 
 MIDDLEWARE = [
@@ -130,28 +132,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CKEDITOR_UPLOAD_PATH = "uploads/"
 
-# # might visit later to add other stuff
-# CKEDITOR_CONFIGS = {
-#     'default': {
-#         'toolbar': 'Custom',
-#         'toolbar_Custom': [
-#             ['Bold', 'Italic', 'Underline'],
-#             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-#             ['Link', 'Unlink'],
-#             ['RemoveFormat', 'Source'],
-#             ['Image', 'Table'],
-#         ],
-
-#         'width': 'auto',
-#         'height': 'auto',
-#     }
-# }
-
-# CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
-
-# KW33333 CK! ony3 aye gbemi 😭!
 
 TINYMCE_DEFAULT_CONFIG = TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
