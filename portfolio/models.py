@@ -25,11 +25,11 @@ class Tag(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True)
-    description = models.TextField()
+    description = HTMLField()
     featured_image = models.ImageField(upload_to='portfolio/images/')
     link = models.URLField()
     published_at = models.DateTimeField(null=True, blank=True)
-    content = HTMLField()
+    
     tags = models.ManyToManyField(Tag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

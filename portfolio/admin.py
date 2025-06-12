@@ -21,7 +21,7 @@ class ProjectAdmin(admin.ModelAdmin):
     # this organizes the fields in the form 
     fieldsets = (
         ('Content', {
-            'fields': ('name', 'slug', 'description')
+            'fields': ('name', 'slug', 'description', 'link')
         }),
         
         ('Media & Tags', {
