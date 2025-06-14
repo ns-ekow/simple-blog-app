@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 
 
+
 # The Haram begins
 
 class Tag(models.Model):
@@ -98,11 +99,14 @@ class Post(models.Model):
 
 
 
+from django.core.exceptions import ValidationError
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='authored_comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
     
     parent = models.ForeignKey(
         'self',
@@ -110,44 +114,48 @@ class Comment(models.Model):
         null=True,
         blank=True,
         related_name='replies'
-
     )
-
 
     class Meta:
         ordering = ['created_at']
         verbose_name_plural = "Comments"
     
+    def clean(self):
+        if self.parent and self.parent.parent:
+            raise ValidationError("Replies can only be one level deep")
+    
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
-
 
     @property
     def is_reply(self):
         return self.parent is not None
     
-
     @property
     def is_top_level(self):
         return self.parent is None
     
-
     @property
     def reply_count(self):
-        return self.replies.count()
+        return self.replies.filter(is_active=True).count()
     
     @property
     def author_display_name(self):
-        """Get display name for comment author"""
         if self.author.first_name and self.author.last_name:
             return f"{self.author.first_name} {self.author.last_name}"
         return self.author.username
 
     @property
     def short_content(self):
-        """Get truncated version of comment content"""
         return self.content[:100] + "..." if len(self.content) > 100 else self.content
 
+    @classmethod
+    def get_comments_for_post(cls, post):
+        return cls.objects.filter(
+            post=post, 
+            parent=None,
+            is_active=True
+        ).prefetch_related('replies__author', 'author')
 
 # I tried my best to not be a ctrl + c ctrl + v engineer. don't judge me for the code above. thank you very much. 
 

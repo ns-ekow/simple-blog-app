@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>{% block title %}My Blog{% endblock %}</title>
     <style>
         /* Very basic styling for now */
@@ -34,10 +35,24 @@
 <body>
     <header>
         <h1><a href="{% url 'blog:post_list' %}">My Blog</a></h1>
-        <nav>
-            <a href="/">Home</a> |
-            <a href="{% url 'blog:post_list' %}">Blog</a>
-        </nav>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+        
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <span class="navbar-text me-3">
+                        Welcome, {{ user.username }}!
+                    </span>
+                    <a class="nav-link" href="{% url 'blog:logout' %}">Logout</a>
+
+                     
+                    {% else %}
+                    <a class="nav-link" href="{% url 'blog:login' %}">Login</a> 
+                    
+                    <a class="nav-link" href="{% url 'blog:signup' %}">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>  </nav>
     </header>
 
     <main>

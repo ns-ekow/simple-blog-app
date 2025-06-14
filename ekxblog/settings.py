@@ -109,6 +109,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect after login/logout
+LOGIN_REDIRECT_URL = '/'  # or wherever you want users to go after login
+LOGOUT_REDIRECT_URL = '/'  # redirect after logout
+LOGIN_URL = '/login/'  # where to redirect unauthenticated users
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

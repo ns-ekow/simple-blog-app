@@ -25,17 +25,88 @@
     </div>
 </article>
 <!-- display comments -->
- <h3>Comments</h3>
-<ul>
-    {% for comment in post.comments.all %}
-        <li>
-            <div class="comment-meta">
-                By {{ comment.author.username }} on {{ comment.created_at|date:"F d, Y" }}
+
+<div class="comments-section mt-5">
+    <h3>Comments ({{ comments.count }})</h3>
+
+    <!-- Comment form -->
+    {% if user.is_authenticated %}
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+    {% else %}
+    <div class="alert alert-info">
+        <a href="{% url 'login' %}">Login</a> to leave a comment.
+    </div>
+    {% endif %}
+
+    
+    <!-- Social sharing section (from before) -->
+    <div class="social-share mt-4 mb-4">
+        <h5>Share this post:</h5>
+        <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri }}"
+                target="_blank" class="btn btn-info btn-sm me-2">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank"
+                class="btn btn-primary btn-sm me-2">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" target="_blank"
+                class="btn btn-success btn-sm">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+    </div>
+    
+    <!-- Comments section -->
+    <div class="comments-section mt-5">
+        
+    
+       
+    
+        <!-- Display comments -->
+        <div class="comments-list">
+            {% for comment in comments %}
+            {% include 'blog/comment.html' with comment=comment %}
+            {% empty %}
+            <div class="text-center py-4">
+                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
             </div>
-            <p>{{ comment.content }}</p>
-        </li>
-    {% endfor %}
-</ul>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- JavaScript for reply functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle reply button clicks
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const commentId = this.dataset.commentId;
+                    const replyForm = document.getElementById(`reply-form-${commentId}`);
+
+                    // Toggle reply form visibility
+                    if (replyForm.style.display === 'none' || !replyForm.style.display) {
+                        replyForm.style.display = 'block';
+                        this.textContent = 'Cancel Reply';
+                        this.classList.remove('btn-outline-primary');
+                        this.classList.add('btn-outline-secondary');
+                    } else {
+                        replyForm.style.display = 'none';
+                        this.textContent = 'Reply';
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-outline-primary');
+                    }
+                });
+            });
+        });
+    </script>
 
 <nav>
     <a href="{% url 'blog:post_list' %}">&larr; Back to all posts</a>

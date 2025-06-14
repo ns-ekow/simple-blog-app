@@ -1,0 +1,75 @@
+<!-- Individual comment template -->
+<div class="comment mb-4 {% if comment.is_reply %}ms-4{% endif %}" id="comment-{{ comment.id }}">
+    <div class="card {% if comment.is_reply %}border-start border-3 border-info{% endif %}">
+        <div class="card-body">
+            <!-- Comment header -->
+            <div class="comment-header d-flex justify-content-between align-items-start mb-2">
+                <div class="comment-meta">
+                    <strong class="comment-author">
+                        <i class="fas fa-user-circle me-1"></i>
+                        {{ comment.author_display_name }}
+                    </strong>
+                    <small class="text-muted ms-2">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ comment.created_at|timesince }} ago
+                    </small>
+                    {% if comment.is_reply %}
+                    <small class="text-info ms-2">
+                        <i class="fas fa-reply me-1"></i>Reply
+                    </small>
+                    {% endif %}
+                </div>
+
+                <!-- Comment actions -->
+                <div class="comment-actions">
+                    {% if user.is_authenticated and not comment.is_reply %}
+                    <button class="btn btn-outline-primary btn-sm reply-btn" data-comment-id="{{ comment.id }}">
+                        <i class="fas fa-reply me-1"></i>Reply
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Comment content -->
+            <div class="comment-content">
+                {{ comment.content|linebreaks }}
+            </div>
+
+            <!-- Reply form (hidden initially) -->
+            {% if user.is_authenticated and not comment.is_reply %}
+            <div id="reply-form-{{ comment.id }}" class="reply-form mt-3" style="display: none;">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-reply me-1"></i>
+                            Reply to {{ comment.author_display_name }}
+                        </h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                            <div class="mb-3">
+                                <textarea name="content" class="form-control" rows="3" placeholder="Write your reply..."
+                                    required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fas fa-paper-plane me-1"></i>Post Reply
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Display replies -->
+    {% if comment.replies.all %}
+    <div class="replies ms-4 mt-3">
+        {% for reply in comment.replies.all %}
+        {% if reply.is_active %}
+        {% include 'blog/comment.html' with comment=reply %}
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
